@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0c1321" />
+  <title>SQL LAB — Desafios Oracle HR</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#121d30;--panel2:#16243a;--line:#2c3e56;--txt:#f3f5fa;--muted:#9fb0c7;--amber:#ffae46;--amber2:#f47c39;--mint:#63d9a7;--blue:#7db6ff;--radius:16px}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:radial-gradient(ellipse at 78% 0%,#182741 0%,#0b1220 42%);color:var(--txt);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+    button,textarea,input{font:inherit} button{cursor:pointer} button:disabled{opacity:.4;cursor:not-allowed} button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid #8bc8ff;outline-offset:2px}
+    .top{border-bottom:1px solid var(--line);background:rgba(9,16,29,.87);position:sticky;top:0;z-index:10;backdrop-filter:blur(13px)}
+    .top-inner{max-width:1420px;margin:auto;min-height:77px;padding:13px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}.mark{height:45px;width:45px;border-radius:13px;display:grid;place-items:center;font-weight:950;color:#0b1320;font-size:17px;background:linear-gradient(145deg,var(--amber),var(--amber2));box-shadow:0 9px 28px #ff903633}
+    .brand h1{font-size:20px;margin:0;line-height:1.1;letter-spacing:.035em}.brand p{font-size:12px;color:var(--muted);margin:4px 0 0}
+    .top-right{display:flex;align-items:center;gap:16px}.progress-caption{color:var(--muted);font-size:12px;text-align:right}.progress-caption strong{color:var(--txt);font-size:17px;display:block;font-variant-numeric:tabular-nums}
+    .progress-rail{width:170px;height:9px;border-radius:15px;overflow:hidden;background:#293850}.progress-fill{background:linear-gradient(90deg,var(--amber2),var(--amber));height:100%;width:0%;transition:width .25s}
+    .wrap{max-width:1420px;margin:auto;padding:26px 24px 50px;display:grid;grid-template-columns:330px minmax(0,1fr);gap:24px;align-items:start}
+    .side{border:1px solid var(--line);background:#121d30dd;border-radius:var(--radius);overflow:hidden;position:sticky;top:103px;max-height:calc(100vh - 127px);display:flex;flex-direction:column}
+    .side-top{padding:20px 18px 15px;border-bottom:1px solid var(--line)}.side h2{margin:0 0 4px;font-size:16px}.side-intro{color:var(--muted);font-size:13px;margin:0 0 14px}.search{width:100%;height:42px;padding:0 12px;background:#091424;border:1px solid #37445a;color:var(--txt);border-radius:10px}
+    .filters{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.filter{border:1px solid #364860;background:transparent;color:#bdcadb;padding:6px 10px;border-radius:9px;font-size:12px}.filter.active{border-color:var(--amber);color:#151c2a;background:var(--amber);font-weight:750}
+    .side-list{overflow:auto;padding:10px}.item{display:flex;align-items:center;gap:11px;border-radius:11px;padding:12px 10px;color:#dce5f1;width:100%;background:none;border:1px solid transparent;text-align:left;margin:1px 0}.item:hover{background:#21314a}.item.active{border-color:#a77740;background:#2a2b32}.item-num{width:34px;height:34px;flex:0 0 34px;border-radius:9px;background:#263650;color:var(--blue);display:grid;place-items:center;font-size:13px;font-weight:800}.item.active .item-num{background:#613f25;color:#ffcf8d}.item.done .item-num{background:#21483e;color:var(--mint)}.item-body{flex:1;min-width:0}.item-title{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.item-sub{font-size:11px;color:var(--muted)}.check{color:var(--mint);font-size:19px}.empty{padding:26px 12px;color:var(--muted);font-size:14px;text-align:center}
+    .main{min-width:0}.welcome{margin-bottom:24px;display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.eyebrow{color:var(--amber);font-weight:800;letter-spacing:.13em;text-transform:uppercase;font-size:11px}.welcome h2{font-size:27px;line-height:1.17;margin:6px 0 8px;letter-spacing:-.025em}.welcome p{color:var(--muted);font-size:14px;margin:0;max-width:750px}
+    .ghost,.button,.button2{border-radius:10px;padding:10px 15px;font-size:13px;font-weight:750;min-height:40px;transition:transform .15s,background .15s}.ghost{background:#19283d;border:1px solid #374761;color:#e5edf7}.ghost:hover{background:#21354f}.button{background:linear-gradient(100deg,#ffb755,#fa9142);border:1px solid #ffb755;color:#152030}.button:hover{transform:translateY(-1px)}.button2{background:#1e3342;border:1px solid #4a7e76;color:#b9f0d6}.button2:hover{background:#26443f}
+    .exercise{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,#152239,#101c30);padding:27px 30px;margin-bottom:18px;box-shadow:0 15px 45px #03091333}.meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:14px}.tag{border-radius:7px;background:#25364c;border:1px solid #40536d;font-weight:750;color:#b9d7ff;padding:5px 9px;font-size:11px}.tag.num{color:#ffd196;border-color:#6a4f36;background:#392c2b}.level-label{font-size:12px;color:var(--muted)}.exercise h3{font-size:28px;line-height:1.25;margin:0 0 17px;letter-spacing:-.02em}.prompt{font-size:19px;color:#f0f3f8;line-height:1.56;margin:0 0 21px;max-width:850px}.prompt code{color:#ffddaa;background:#322d30;border-radius:4px;padding:2px 4px;font-size:.87em}.focus-hint{border-left:3px solid var(--amber);background:#292a32;padding:12px 14px;font-size:13px;color:#dbdcdd;border-radius:0 8px 8px 0}
+    .hints{margin-bottom:18px;border-radius:var(--radius);background:#111e2e;border:1px solid #324458;padding:20px 23px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.section-title{display:flex;gap:10px;align-items:center;font-weight:850;font-size:15px}.hint-icon{font-size:19px}.tipcount{font-size:12px;color:#a5b6c8}.hints-intro{font-size:13px;color:var(--muted);margin:8px 0 14px}.tips-list{display:grid;gap:9px;margin-bottom:14px}.tip{display:flex;gap:11px;background:#253244;border:1px solid #3d4c5e;border-radius:10px;padding:12px 14px;font-size:14px;color:#d8e4f2}.tip-number{color:var(--amber);font-weight:850;flex-shrink:0}.tip strong{color:#ffe2ad}
+    .tips-empty{font-size:13px;color:#8295ab;margin:12px 0}.tip-controls{display:flex;gap:9px;flex-wrap:wrap}.tiny{color:var(--muted);font-size:12px}
+    .editor{border:1px solid var(--line);border-radius:var(--radius);background:#111a2a;overflow:hidden}.editor-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line)}.editor-heading{font-weight:800;font-size:15px}.editor-sub{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:2px}.editor-actions{display:flex;gap:8px;flex-wrap:wrap}.editor textarea{background:#07101d;color:#d8ebff;border:0;display:block;resize:vertical;width:100%;min-height:260px;line-height:1.65;padding:19px 22px;font:15px/1.65 ui-monospace,SFMono-Regular,Consolas,Monaco,monospace;tab-size:2;outline:0}.editor textarea::placeholder{color:#6a819a}.editor-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:13px 17px}.autosave{font-size:12px;color:var(--muted)}.autosave strong{color:var(--mint);font-weight:600}.bottom-nav{margin-top:18px;display:flex;justify-content:space-between;gap:12px;align-items:center}.bottom-right{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}.foot{font-size:12px;color:#8095ad;padding:19px 5px 0}.pill{color:var(--mint);font-size:12px;border:1px solid #3d6f64;background:#1c3838;padding:6px 10px;border-radius:20px}.toast{position:fixed;right:24px;bottom:24px;background:#244436;color:#e2ffe8;border:1px solid #4e9c79;border-radius:10px;padding:12px 17px;box-shadow:0 9px 32px #0007;display:none;z-index:25;font-size:13px}.toast.show{display:block}
+
+    .verify-result{margin-top:16px;padding:18px 19px;border-radius:14px;border:1px solid #3d526c;background:#15283d;color:#e9f1fb}
+    .verify-result[hidden]{display:none!important}.verify-result.aligned{border-color:#3b7364;background:#17342f}.verify-result.review{border-color:#8a6945;background:#2b2929}.verify-result.error{border-color:#9c5e5e;background:#3a282f}
+    .verify-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.verify-head strong{font-size:17px}.verify-mark{background:#ffffff22;width:30px;height:30px;border-radius:50%;font-size:19px;font-weight:900;display:grid;place-items:center}.verify-count{font-size:12px;color:#c5d3e4;margin-left:auto}
+    .verify-result p{margin:9px 0;color:#e2e8ef;font-size:14px}.verify-next{margin-top:12px;background:#0d1a2d77;padding:12px 14px;border-radius:10px}.verify-next strong{font-size:13px}.verify-next ul{padding-left:18px;margin:7px 0 0;font-size:14px}.verify-next li{margin-top:6px}.verify-passed{font-size:12px;color:#aee7c5}.verify-disclaimer{color:#b3c0d1;font-size:12px;margin-top:12px;border-top:1px solid #ffffff1a;padding-top:11px}
+    .verification-row{margin:0 17px 15px;display:flex;align-items:center;gap:13px;flex-wrap:wrap}.verification-row .button{min-height:45px}.verification-note{font-size:12px;color:#a5b7cf;flex:1;min-width:200px}
+    .db-guide{margin-bottom:19px;border:1px solid #30435a;border-radius:13px;padding:12px 17px;background:#142138}.db-guide summary{cursor:pointer;color:#e8eef6;font-weight:700;font-size:13px}.db-guide p{font-size:13px;color:#aabbd0;margin:10px 0 7px}.db-guide code{color:#ffcf92;font-size:12px}
+    @media(max-width:950px){.wrap{grid-template-columns:260px minmax(0,1fr);gap:16px;padding:18px}.exercise{padding:23px 22px}.prompt{font-size:17px}.exercise h3{font-size:24px}}
+    @media(max-width:700px){.top-inner{padding:13px 15px}.top-right{gap:9px}.progress-rail{width:80px}.progress-caption strong{font-size:14px}.wrap{display:flex;flex-direction:column;padding:16px;gap:18px}.side{position:static;width:100%;max-height:245px}.side-top{padding:13px}.side-intro{display:none}.side h2{font-size:14px}.side-list{display:flex;overflow-x:auto;gap:7px;padding:8px}.item{min-width:180px;max-width:180px;margin:0;padding:8px}.item-num{width:28px;height:28px;flex-basis:28px}.item-sub{display:none}.welcome h2{font-size:22px}.welcome{margin-bottom:16px}.exercise{padding:18px}.exercise h3{font-size:23px}.prompt{font-size:16px}.hints{padding:16px}.editor textarea{min-height:225px;padding:15px;font-size:14px}.brand h1{font-size:17px}.brand p{font-size:10px}.mark{height:39px;width:39px}}
+    @media print {.top,.side,.editor-actions,.bottom-nav,.hint-controls,.welcome .ghost{display:none!important}.wrap{display:block}.exercise,.hints,.editor{break-inside:avoid;box-shadow:none}.editor textarea{height:220px}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="top-inner">
+    <div class="brand"><span class="mark" aria-hidden="true">SQL</span><div><h1>SQL LAB <span style="color:var(--amber)">/ ORACLE HR</span></h1><p>Desafios práticos com pistas — sem gabarito</p></div></div>
+    <div class="top-right"><div class="progress-caption"><strong id="done-count">0 / 20</strong>concluídos</div><div class="progress-rail" aria-label="Progresso da turma"><div id="progress-fill" class="progress-fill"></div></div></div>
+  </div></header>
+  <div class="wrap">
+    <aside class="side" aria-label="Seleção de exercícios"><div class="side-top"><h2>Escolha seu desafio</h2><p class="side-intro">Resolva no seu ritmo. Dicas só quando precisar.</p><input class="search" id="search" placeholder="Buscar exercício..." aria-label="Buscar exercício" /><div class="filters" id="filters"></div></div><nav class="side-list" id="exercise-list"></nav></aside>
+    <main class="main"><div class="welcome"><div><div class="eyebrow">TREINAMENTO • SCHEMA HR</div><h2>Aprenda investigando os dados.</h2><p>Leia o desafio, escreva o SQL e clique em Verificar resposta para receber orientações. Depois, teste no Oracle. Nenhum gabarito é exibido.</p></div><button class="ghost" id="download-btn" title="Salva suas consultas em um arquivo de texto">↓ Exportar meu SQL</button></div>
+      <details class="db-guide"><summary>🗂️ Como acessar as tabelas do HR no Oracle?</summary><p>Na VM da aula, use o SQL*Plus para consultar o schema HR. Teste <code>SELECT * FROM HR.EMPLOYEES;</code>. Se funcionar, você pode usar <code>ALTER SESSION SET CURRENT_SCHEMA = HR;</code> para consultar as tabelas sem o prefixo HR. Não execute comandos de alteração nos dados.</p></details>
+      <section class="exercise" aria-labelledby="exercise-title"><div class="meta"><span class="tag num" id="exercise-badge">EXERCÍCIO 01</span><span class="tag" id="level-badge">NÍVEL 1</span><span class="level-label" id="level-name"></span></div><h3 id="exercise-title"></h3><p class="prompt" id="exercise-prompt"></p><div class="focus-hint">🎯 <strong>Missão:</strong> construa sua consulta. Tente antes de abrir as dicas.</div></section>
+      <section class="hints" aria-labelledby="hints-title"><div class="section-head"><div class="section-title" id="hints-title"><span class="hint-icon">💡</span> Pistas para destravar</div><div class="tipcount" id="hint-count">0 de 3 pistas reveladas</div></div><p class="hints-intro">Cada pista entrega uma direção, não a resposta inteira.</p><div class="tips-list" id="tips-list" aria-live="polite"></div><div class="tip-controls"><button class="button" id="hint-btn">Revelar 1ª dica</button><button class="ghost" id="hide-hints-btn" style="display:none">Ocultar dicas</button></div></section>
+      <section class="editor" aria-labelledby="editor-heading"><div class="editor-bar"><div id="editor-heading" class="editor-heading">Sua consulta SQL <span class="editor-sub">Salva automaticamente neste navegador</span></div><div class="editor-actions"><button class="ghost" id="clear-btn">Limpar</button><button class="ghost" id="copy-btn">Copiar SQL</button></div></div><textarea id="sql-input" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Escreva aqui sua consulta SQL" placeholder="-- Escreva sua consulta SQL aqui...&#10;SELECT ..."></textarea><div class="editor-footer"><div class="autosave"><strong>●</strong> Salvo neste dispositivo · Teste seu SQL no Oracle SQL Developer ou Oracle Live SQL.</div><span class="pill" id="status-pill">Em andamento</span></div></section>
+      <div class="verification-row"><button class="button" id="verify-btn" type="button">🔍 Verificar resposta</button><span class="verification-note">Conferência local de critérios, sem conexão com o banco e sem exibir o gabarito.</span></div>
+      <section id="verify-result" class="verify-result" aria-live="polite" aria-label="Feedback da verificação" hidden></section>
+      <nav class="bottom-nav" aria-label="Navegação entre os desafios"><button class="ghost" id="prev-btn">← Anterior</button><div class="bottom-right"><button class="button2" id="complete-btn">✓ Marcar como concluído</button><button class="button" id="next-btn">Próximo →</button></div></nav>
+      <div class="foot">A verificação é apenas orientativa: pode não reconhecer SQL alternativo nem todos os erros. Execute no Oracle para conferir de verdade. · Schema HR Oracle · 20 exercícios em 4 níveis. As respostas e o progresso ficam somente no navegador deste dispositivo. A página funciona sem internet, mas não executa consultas SQL.</div>
+    </main>
+  </div><div role="status" class="toast" id="toast"></div>
+  <script>
+  'use strict';
+  const exercises = [{"id": 1, "level": 1, "title": "Contratações em ordem", "prompt": "Liste o sobrenome (LAST_NAME), cargo (JOB_ID) e data de contratação (HIRE_DATE) de todos os funcionários, ordenando da contratação mais antiga para a mais recente.", "hints": ["Quais três colunas você precisa buscar na tabela EMPLOYEES?", "A ordenação é feita depois da seleção. Pense em ORDER BY.", "Datas mais antigas primeiro significam ordem crescente."]}, {"id": 2, "level": 1, "title": "Salários e cargo", "prompt": "Exiba o primeiro nome, sobrenome e salário dos funcionários que ganham mais de $12.000 e ocupam o cargo IT_PROG.", "hints": ["Comece pela tabela EMPLOYEES e escolha apenas as três colunas solicitadas.", "Você precisa aplicar duas condições ao mesmo tempo, não uma ou outra.", "Combine as condições com AND e compare o texto do cargo como um valor de texto."]}, {"id": 3, "level": 1, "title": "Sobrenomes com J ou K", "prompt": "Selecione todos os funcionários cujo sobrenome (LAST_NAME) começa com a letra J ou com a letra K.", "hints": ["Filtrar por início de uma palavra é diferente de verificar igualdade exata.", "Use LIKE com um caractere curinga para representar o restante do sobrenome.", "Basta que uma das letras sirva: combine os testes com OR."]}, {"id": 4, "level": 1, "title": "Nome completo e comissão", "prompt": "Exiba o nome completo (primeiro nome + sobrenome) e a comissão (COMMISSION_PCT) de todos os funcionários que recebem comissão, em ordem decrescente do percentual.", "hints": ["No Oracle, existe um operador para juntar textos: ||.", "Como identificar quem tem comissão informada? Compare com NULL usando IS NOT NULL.", "Ordene a comissão da maior para a menor, sem ordenar pelo nome."]}, {"id": 5, "level": 1, "title": "Localizações dos EUA e Canadá", "prompt": "Mostre o ID da localização, endereço de rua e cidade das localizações cujo país (COUNTRY_ID) é US ou CA.", "hints": ["A tabela usada neste exercício é LOCATIONS.", "É possível verificar se um valor pertence a uma lista de alternativas.", "Use IN para evitar escrever duas comparações de igualdade separadas."]}, {"id": 6, "level": 2, "title": "Funcionário e departamento", "prompt": "Exiba o primeiro nome de cada funcionário, seu ID de departamento e o nome do departamento (DEPARTMENT_NAME).", "hints": ["Você vai precisar de dados de EMPLOYEES e DEPARTMENTS.", "Pergunte qual coluna aparece em ambas as tabelas e conecta os registros.", "Faça um INNER JOIN usando DEPARTMENT_ID e apelidos para diferenciar as tabelas."]}, {"id": 7, "level": 2, "title": "Cargo e faixa salarial", "prompt": "Liste o primeiro nome do funcionário, o título do cargo (JOB_TITLE) e os salários mínimo e máximo permitidos para o cargo.", "hints": ["O primeiro nome está em EMPLOYEES; a descrição e a faixa do cargo estão em JOBS.", "Qual identificador liga o registro do funcionário à definição de cargo?", "Associe as tabelas pelo JOB_ID com um JOIN."]}, {"id": 8, "level": 2, "title": "Departamento e localização", "prompt": "Mostre o sobrenome de cada funcionário, o nome do departamento, a cidade (CITY) e o estado (STATE_PROVINCE) onde o departamento está localizado.", "hints": ["Os campos pedidos estão distribuídos em três tabelas: EMPLOYEES, DEPARTMENTS e LOCATIONS.", "Primeiro encontre o departamento do funcionário. Depois descubra onde o departamento fica.", "Monte dois JOINs: um por DEPARTMENT_ID e outro por LOCATION_ID."]}, {"id": 9, "level": 2, "title": "Quem é o gerente?", "prompt": "Liste o primeiro nome de cada funcionário e o primeiro nome do seu respectivo gerente. Nomeie as colunas como Funcionario e Gerente.", "hints": ["Funcionários e gerentes são registros da mesma tabela.", "Quando uma tabela aparece duas vezes na consulta, dê um apelido diferente para cada papel.", "O MANAGER_ID do funcionário aponta para o EMPLOYEE_ID do gerente."]}, {"id": 10, "level": 2, "title": "Todos os departamentos", "prompt": "Liste todos os departamentos e a quantidade de funcionários em cada um, incluindo os departamentos sem funcionários, com contagem 0.", "hints": ["O ponto mais importante é manter departamentos mesmo sem correspondência em EMPLOYEES.", "Comece por DEPARTMENTS e pense qual JOIN mantém todas as linhas da tabela à esquerda.", "Agrupe por departamento e conte um identificador do funcionário, não todas as linhas indistintamente."]}, {"id": 11, "level": 3, "title": "Resumo dos salários", "prompt": "Mostre o maior salário, o menor salário, a soma dos salários e a média salarial da empresa inteira.", "hints": ["Você precisa produzir valores resumidos, e não uma linha para cada funcionário.", "As funções MAX, MIN, SUM e AVG resumem uma coluna numérica.", "Todas podem usar a coluna SALARY da tabela EMPLOYEES, sem precisar de GROUP BY."]}, {"id": 12, "level": 3, "title": "Departamentos acima da média", "prompt": "Exiba o ID de cada departamento e sua média salarial, mas apenas para departamentos cuja média salarial seja maior que $6.000.", "hints": ["É preciso calcular uma média separada para cada departamento.", "GROUP BY organiza os funcionários em grupos por DEPARTMENT_ID.", "Como você está filtrando um resultado agregado, use HAVING no lugar de WHERE."]}, {"id": 13, "level": 3, "title": "Maior folha por cargo", "prompt": "Descubra qual cargo (JOB_ID) possui o maior gasto total com salários (soma dos salários pagos aos funcionários do cargo).", "hints": ["Para cada cargo, calcule a soma de SALARY.", "Agrupe por JOB_ID e ordene o valor total do maior para o menor.", "Depois de ordenar, limite o resultado à primeira linha usando a sintaxe do Oracle."]}, {"id": 14, "level": 3, "title": "Acima da média da empresa", "prompt": "Selecione o primeiro nome e o salário dos funcionários que ganham mais do que a média salarial da empresa inteira. Use subconsulta.", "hints": ["A condição de salário precisa comparar cada funcionário com um único valor calculado.", "Calcule a média de SALARY em uma consulta interna.", "Use essa consulta entre parênteses na condição da consulta externa."]}, {"id": 15, "level": 3, "title": "Colegas de Lex", "prompt": "Liste o primeiro nome e o ID do departamento dos funcionários que trabalham no mesmo departamento que um funcionário chamado Lex. Use subconsulta.", "hints": ["Antes de procurar os colegas, descubra o DEPARTMENT_ID de Lex.", "A consulta externa busca funcionários; a subconsulta localiza o departamento de Lex.", "Compare o departamento encontrado na subconsulta com o departamento de cada funcionário."]}, {"id": 16, "level": 4, "title": "Simulação de aumento", "prompt": "Exiba o primeiro nome, salário atual e salário projetado com aumento de 15%, formatando os dois valores monetários com duas casas decimais.", "hints": ["O salário projetado é um cálculo feito a partir da coluna SALARY.", "Um aumento de 15% corresponde a multiplicar por 1,15 (no código SQL, o decimal usa ponto).", "No Oracle, TO_CHAR pode formatar números; use um padrão que mostre duas casas decimais."]}, {"id": 17, "level": 4, "title": "Tempo de casa", "prompt": "Mostre o primeiro nome de cada funcionário e quantos anos completos ele tem de empresa, contando desde HIRE_DATE até a data atual.", "hints": ["Você precisará comparar HIRE_DATE com a data atual do banco.", "No Oracle, SYSDATE dá a data atual e MONTHS_BETWEEN calcula a diferença em meses.", "Divida os meses por 12 e descarte a parte fracionária para obter anos completos."]}, {"id": 18, "level": 4, "title": "Classificação por salário", "prompt": "Mostre o primeiro nome, salário e classificação: JÚNIOR para salários menores que 5.000, PLENO de 5.000 a 10.000 (inclusive) e SÊNIOR acima de 10.000. Use CASE.", "hints": ["CASE permite devolver um texto diferente conforme uma condição.", "Avalie primeiro o intervalo de JÚNIOR e depois o de PLENO.", "Use WHEN / THEN e ELSE, terminando a expressão com END."]}, {"id": 19, "level": 4, "title": "Lista única de gerentes", "prompt": "Mostre o primeiro nome e o sobrenome de todos os gerentes da empresa, sem repetir nomes. Considere gerente quem aparece na coluna MANAGER_ID de algum funcionário.", "hints": ["O gerente também é funcionário, portanto EMPLOYEES aparece nos dois lados do relacionamento.", "Associe MANAGER_ID de um funcionário ao EMPLOYEE_ID do gerente.", "Uma pessoa pode gerenciar vários funcionários; como eliminar as repetições da lista?"]}, {"id": 20, "level": 4, "title": "Maior salário do departamento", "prompt": "Mostre o primeiro nome, salário e ID do departamento dos funcionários que recebem o maior salário dentro de seu próprio departamento.", "hints": ["O maior salário deve ser encontrado dentro do departamento de cada funcionário, não da empresa inteira.", "Use uma subconsulta que calcule MAX(SALARY) para um departamento.", "Relacione o DEPARTMENT_ID da subconsulta ao DEPARTMENT_ID da linha da consulta externa. Essa técnica é uma subconsulta correlacionada."]}];
+  // Verificador pedagógico local. Não executa SQL, não contém gabaritos completos.
+  // As regras conferem pistas estruturais; consultas alternativas podem precisar de revisão humana.
+  function readSQL(source){
+    let cleaned='', quoted=null, block=false, line=false;
+    for(let i=0;i<source.length;i++){
+      const c=source[i], next=source[i+1];
+      if(line){if(c==='\n'){line=false;cleaned+='\n';}continue;}
+      if(block){if(c==='*'&&next==='/'){block=false;i++;cleaned+=' ';}continue;}
+      if(quoted){cleaned+=c;if(c===quoted){if(next===quoted){cleaned+=next;i++;}else{quoted=null;}}continue;}
+      if(c==='\''||c==='"'){quoted=c;cleaned+=c;continue;}
+      if(c==='-'&&next==='-'){line=true;i++;cleaned+=' ';continue;}
+      if(c==='/'&&next==='*'){block=true;i++;cleaned+=' ';continue;}
+      cleaned+=c;
+    }
+    if(quoted)return {error:'Parece haver um texto entre aspas não fechado. Confira as aspas simples ou duplas.'};
+    if(block)return {error:'Há um comentário /* ... */ que não foi fechado.'};
+    const lexical=/'(?:''|[^'])*'|"(?:""|[^"])*"|>=|<=|<>|!=|\|\||[A-Za-z_][\w$#]*|\d+(?:\.\d+)?|[(),;.*+\-\/=<>%]/g;
+    const tokens=[], gaps=[];
+    let match,last=0;
+    while((match=lexical.exec(cleaned))!==null){
+      if(cleaned.slice(last,match.index).trim())gaps.push(cleaned.slice(last,match.index).trim());
+      tokens.push(match[0][0]==='\''||match[0][0]==='"'?match[0]:match[0].toUpperCase());
+      last=lexical.lastIndex;
+    }
+    if(cleaned.slice(last).trim())gaps.push(cleaned.slice(last).trim());
+    if(gaps.length)return {error:'Há caracteres que o verificador não reconheceu. Confira sua consulta no Oracle.'};
+    if(!tokens.length)return {error:'Escreva sua consulta SQL antes de verificar.'};
+    const semis=tokens.flatMap((x,i)=>x===';'?[i]:[]);
+    if(semis.length>1||(semis.length===1&&semis[0]!==tokens.length-1))return {error:'Verifique apenas uma consulta SELECT por vez. Remova comandos adicionais.'};
+    if(semis.length)tokens.pop();
+    const unsafe=/^(INSERT|UPDATE|DELETE|MERGE|DROP|ALTER|TRUNCATE|CREATE|GRANT|REVOKE|BEGIN|EXEC|EXECUTE|COMMIT|ROLLBACK)$/;
+    if(tokens.some(t=>unsafe.test(t)))return {error:'Estes desafios são de leitura. Use apenas SELECT, sem comandos que alteram o banco.'};
+    if(!tokens.includes('SELECT'))return {error:'Não encontrei SELECT. Comece construindo uma consulta de leitura.'};
+    let depth=0, clause='', chunks={}, selectAt=-1;
+    for(let i=0;i<tokens.length;i++){
+      const t=tokens[i];
+      if(t==='('){depth++;continue;}
+      if(t===')'){depth--;if(depth<0)return {error:'Há parênteses fechando sem a correspondente abertura.'};continue;}
+      if(depth!==0)continue;
+      const next=tokens[i+1];
+      if(t==='SELECT'){clause='SELECT';selectAt=i;chunks[clause]=[i+1,null];}
+      else if(t==='FROM'||t==='WHERE'||t==='HAVING'||(t==='GROUP'&&next==='BY')||(t==='ORDER'&&next==='BY')||(t==='FETCH'&&next==='FIRST')){
+        if(clause&&chunks[clause])chunks[clause][1]=i;
+        clause=t==='GROUP'?'GROUP':t==='ORDER'?'ORDER':t==='FETCH'?'FETCH':t;
+        chunks[clause]=[i+(clause==='GROUP'||clause==='ORDER'||clause==='FETCH'?2:1),null];
+      }
+    }
+    if(depth!==0)return {error:'Confira os parênteses: falta abrir ou fechar algum.'};
+    if(selectAt<0||!chunks.FROM)return {error:'A consulta precisa selecionar colunas e informar de qual tabela os dados vêm (FROM).'};
+    if(clause&&chunks[clause])chunks[clause][1]=tokens.length;
+    const part=name=>{const p=chunks[name];return p?tokens.slice(p[0],p[1]??tokens.length).join(' '):'';};
+    return {tokens,text:tokens.join(' '),sel:part('SELECT'),from:part('FROM'),where:part('WHERE'),group:part('GROUP'),having:part('HAVING'),order:part('ORDER'),fetch:part('FETCH')};
+  }
+  function evaluateSQL(exId,sql){
+    const c=readSQL(sql);
+    if(c.error)return {kind:'error',note:c.error,checks:[]};
+    const checks=[];
+    const has=(s,name)=>/^[A-Z][A-Z0-9_]*$/.test(name)?new RegExp('\\b'+name+'\\b','i').test(s):s.includes(name);
+    const test=(r,s=c.text)=>r.test(s);
+    const table=(t)=>has(c.text,t);
+    const selected=(col)=>has(c.sel,col);
+    const where=(r)=>r.test(c.where);
+    const grp=(col)=>has(c.group,col);
+    const order=(col)=>has(c.order,col);
+    const grpFunc=(fn,col,part=c.text)=>new RegExp('\\b'+fn+'\\s*\\(\\s*(?:[A-Z][\\w$#]*\\s*\\.\\s*)?'+col+'\\s*\\)','i').test(part);
+    const joinKey=(a,b=a)=>new RegExp('\\b'+a+'\\s*=\\s*(?:[A-Z][\\w$#]*\\s*\\.\\s*)?'+b+'\\b|\\b'+b+'\\s*=\\s*(?:[A-Z][\\w$#]*\\s*\\.\\s*)?'+a+'\\b','i').test(c.text);
+    const check=(ok,pass,help)=>checks.push({ok:!!ok,pass,help});
+    const common=(t)=>check(table(t),`Tabela ${t} identificada.`,`Confira qual tabela contém os dados pedidos (${t}).`);
+    const fields=(cols)=>check(cols.every(selected),'Colunas principais encontradas no SELECT.','Confira as colunas pedidas no enunciado e coloque-as no SELECT.');
+    const sqlCount=(name)=>(c.text.match(new RegExp('\\b'+name+'\\b','g'))||[]).length;
+    const joined=()=>has(c.text,'JOIN')||c.from.includes(',');
+    const hasDistinct=()=>has(c.sel,'DISTINCT')||!!c.group;
+    // Algumas alternativas têm resultado equivalente, mas não seguem o formato esperado no enunciado.
+    switch(exId){
+      case 1:
+        common('EMPLOYEES');fields(['LAST_NAME','JOB_ID','HIRE_DATE']);
+        check(order('HIRE_DATE')&&!has(c.order,'DESC'),'Ordenação pela data mais antiga primeiro.','Ordene por HIRE_DATE em ordem crescente (sem DESC).');break;
+      case 2:
+        common('EMPLOYEES');fields(['FIRST_NAME','LAST_NAME','SALARY']);
+        check(where(/\bSALARY\s*>\s*12000\b/),'Filtro de salário encontrado.','O enunciado pede salários estritamente maiores que 12.000. Confira a comparação.');
+        check(where(/\bJOB_ID\s*=\s*'IT_PROG'/)&&has(c.where,'AND'),'Cargo e salário filtrados em conjunto.','Os dois filtros devem valer ao mesmo tempo: confira o cargo IT_PROG e o operador lógico.');break;
+      case 3:
+        common('EMPLOYEES');check(has(c.sel,'*')||selected('LAST_NAME'),'Sobrenomes incluídos no resultado.','A consulta deve retornar os funcionários que atendem ao filtro.');
+        check(where(/\bLAST_NAME\s+LIKE\s+'J%'/)&&where(/\bLAST_NAME\s+LIKE\s+'K%'/)&&has(c.where,'OR')||where(/\bREGEXP_LIKE\s*\(.*'\^\[JK\]'/),'Filtro para as duas iniciais reconhecido.','Confira se o filtro aceita sobrenomes iniciados tanto por J quanto por K (não apenas uma letra).');break;
+      case 4:
+        common('EMPLOYEES');fields(['FIRST_NAME','LAST_NAME','COMMISSION_PCT']);
+        check(has(c.sel,'||')||has(c.sel,'CONCAT'),'Nome completo é concatenado.','O primeiro nome e o sobrenome precisam aparecer unidos como nome completo.');
+        check(where(/\bCOMMISSION_PCT\s+IS\s+NOT\s+NULL/),'Funcionários com comissão filtrados.','Exclua linhas em que COMMISSION_PCT é nulo.');
+        check(order('COMMISSION_PCT')&&has(c.order,'DESC'),'Comissões em ordem decrescente.','Verifique a ordenação da comissão do maior percentual para o menor.');break;
+      case 5:
+        common('LOCATIONS');fields(['LOCATION_ID','STREET_ADDRESS','CITY']);
+        check(has(c.where,'COUNTRY_ID')&&c.where.includes("'US'")&&c.where.includes("'CA'")&&(has(c.where,'IN')||has(c.where,'OR')),'Países US e CA incluídos no filtro.','Confira se a condição sobre COUNTRY_ID inclui os Estados Unidos e o Canadá.');break;
+      case 6:
+        check(table('EMPLOYEES')&&table('DEPARTMENTS'),'Funcionários e departamentos identificados.','Precisará consultar EMPLOYEES e DEPARTMENTS.');
+        fields(['FIRST_NAME','DEPARTMENT_ID','DEPARTMENT_NAME']);
+        check(joined()&&joinKey('DEPARTMENT_ID'),'Relacionamento por departamento localizado.','Confira se as tabelas foram relacionadas pelo identificador do departamento.');break;
+      case 7:
+        check(table('EMPLOYEES')&&table('JOBS'),'Funcionários e cargos identificados.','Os dados estão divididos entre EMPLOYEES e JOBS.');
+        fields(['FIRST_NAME','JOB_TITLE','MIN_SALARY','MAX_SALARY']);
+        check(joined()&&joinKey('JOB_ID'),'Relacionamento por cargo localizado.','Confira a chave que conecta o funcionário ao seu cargo.');break;
+      case 8:
+        check(table('EMPLOYEES')&&table('DEPARTMENTS')&&table('LOCATIONS'),'Três tabelas identificadas.','Localize o funcionário, seu departamento e a localização desse departamento.');
+        fields(['LAST_NAME','DEPARTMENT_NAME','CITY','STATE_PROVINCE']);
+        check(joined()&&joinKey('DEPARTMENT_ID')&&joinKey('LOCATION_ID'),'Relacionamentos por departamento e localização identificados.','Verifique se há dois relacionamentos: departamento e localização.');break;
+      case 9:
+        check(sqlCount('EMPLOYEES')>=2,'Tabela de funcionários usada em dois papéis.','Funcionário e gerente estão na mesma tabela, mas precisam de apelidos diferentes.');
+        check(selected('FIRST_NAME')&&has(c.sel,'FUNCIONARIO')&&has(c.sel,'GERENTE'),'Colunas de funcionário e gerente nomeadas.','Exiba os dois primeiros nomes com os nomes de coluna Funcionario e Gerente.');
+        check(joined()&&joinKey('MANAGER_ID','EMPLOYEE_ID'),'Vínculo entre funcionário e gerente identificado.','Verifique como o MANAGER_ID aponta para o EMPLOYEE_ID do gerente.');break;
+      case 10:
+        check(table('DEPARTMENTS')&&table('EMPLOYEES'),'Tabelas de departamentos e funcionários presentes.','Você precisará contar funcionários em cada departamento.');
+        check(/\bFROM\s+(?:HR\s*\.\s*)?DEPARTMENTS\b[\s\S]*\bLEFT\s+(?:OUTER\s+)?JOIN\s+(?:HR\s*\.\s*)?EMPLOYEES\b/.test(c.text)||/\bFROM\s+(?:HR\s*\.\s*)?EMPLOYEES\b[\s\S]*\bRIGHT\s+(?:OUTER\s+)?JOIN\s+(?:HR\s*\.\s*)?DEPARTMENTS\b/.test(c.text)||has(c.text,'FULL')&&has(c.text,'JOIN'),'JOIN que preserva registros sem correspondência reconhecido.','Escolha um JOIN que também preserve departamentos vazios. Confira a ordem das tabelas.');
+        check(grp('DEPARTMENT_NAME')||grp('DEPARTMENT_ID'),'Agrupamento por departamento identificado.','Agrupe os resultados por departamento.');
+        check(/\bCOUNT\s*\(/.test(c.sel)&&/\bEMPLOYEE_ID\b/.test(c.sel),'Contagem de funcionários identificada.','Para retornar zero em departamentos vazios, conte um identificador de funcionário, não COUNT(*).');break;
+      case 11:
+        common('EMPLOYEES');
+        check(['MAX','MIN','SUM','AVG'].every(fn=>grpFunc(fn,'SALARY',c.sel)),'As quatro estatísticas salariais foram usadas.','Revise quais funções calculam maior, menor, soma e média do salário.');
+        check(!c.group,'Resumo geral sem agrupamento.','O pedido é para a empresa inteira, não separado por departamento.');break;
+      case 12:
+        common('EMPLOYEES');
+        check(selected('DEPARTMENT_ID')&&grpFunc('AVG','SALARY',c.sel),'Departamento e média salarial selecionados.','Mostre o departamento e a média dos salários de cada grupo.');
+        check(grp('DEPARTMENT_ID'),'Agrupamento por departamento identificado.','A média precisa ser calculada por DEPARTMENT_ID.');
+        check(grpFunc('AVG','SALARY',c.having)&&/>\s*6000\b/.test(c.having),'Filtro de média maior que 6.000 encontrado.','O filtro de uma média agregada pertence ao HAVING. Confira também o limite.');break;
+      case 13:
+        common('EMPLOYEES');check(selected('JOB_ID')&&grpFunc('SUM','SALARY',c.sel),'Soma dos salários por cargo presente.','Encontre o total de salários por cargo, não o maior salário individual.');
+        check(grp('JOB_ID'),'Agrupamento por cargo identificado.','Cada cargo precisa ter seu próprio total.');
+        check(!!c.order&&has(c.order,'DESC')&&(has(c.order,'SUM')||/\b2\s+DESC\b/.test(c.order)||(()=>{const m=c.sel.match(/\bSUM\s*\(\s*SALARY\s*\)\s+(?:AS\s+)?([A-Z][A-Z0-9_]*)/);return !!m&&has(c.order,m[1]);})()),'Maior total ordenado primeiro.','Ordene a soma dos salários do maior para o menor.');
+        check(/\bFETCH\s+FIRST\s+1\s+ROWS?\s+ONLY\b/.test(c.text)||/\bROWNUM\s*(?:=|<=)\s*1\b/.test(c.text),'Resultado limitado ao primeiro cargo.','A resposta pede apenas o cargo com maior total; limite a quantidade de linhas.');break;
+      case 14:
+        common('EMPLOYEES');fields(['FIRST_NAME','SALARY']);
+        check(/\bWHERE\b/.test(c.text)&&/\bSALARY\s*>\s*\(\s*SELECT\b/.test(c.text),'Salário comparado a uma subconsulta.','Compare cada SALARY com o resultado de uma consulta interna.');
+        check(/\(\s*SELECT[\s\S]*\bAVG\s*\(\s*SALARY\s*\)[\s\S]*\bFROM\s+(?:HR\s*\.\s*)?EMPLOYEES/.test(c.text),'Média salarial calculada na subconsulta.','A consulta interna deve calcular a média salarial de toda a empresa.');break;
+      case 15:
+        common('EMPLOYEES');fields(['FIRST_NAME','DEPARTMENT_ID']);
+        check(/\bDEPARTMENT_ID\s*(?:=|IN)\s*\(\s*SELECT\b/.test(c.text),'Departamento comparado a uma subconsulta.','A consulta externa precisa comparar departamentos com o resultado da consulta interna.');
+        check(/\(\s*SELECT[\s\S]*\bDEPARTMENT_ID[\s\S]*\bFIRST_NAME\s*=\s*'Lex'/.test(c.text),'Departamento de Lex localizado.','A consulta interna deve procurar o departamento do funcionário chamado Lex.');break;
+      case 16:
+        common('EMPLOYEES');
+        check(selected('FIRST_NAME')&&selected('SALARY'),'Funcionário e salário incluídos no resultado.','Exiba o primeiro nome e os valores de salário.');
+        check(/\bSALARY\s*\*\s*1\.15\b/.test(c.sel)||/\b1\.15\s*\*\s*SALARY\b/.test(c.sel)||/\bSALARY\s*\+\s*SALARY\s*\*\s*0\.15\b/.test(c.sel),'Aumento de 15% identificado.','Confira se a projeção representa 115% do salário atual.');
+        check((c.sel.match(/\bTO_CHAR\s*\(/g)||[]).length>=2&&(/'[^']*(?:\.00|D00)[^']*'/i).test(c.sel),'Dois valores com formatação decimal.','Formate os dois valores monetários para exibir sempre duas casas decimais.');break;
+      case 17:
+        common('EMPLOYEES');check(selected('FIRST_NAME')&&selected('HIRE_DATE'),'Dados do funcionário e contratação utilizados.','Utilize o primeiro nome e a data de contratação para calcular o tempo de casa.');
+        check(has(c.sel,'MONTHS_BETWEEN')&&(has(c.sel,'SYSDATE')||has(c.sel,'CURRENT_DATE')),'Diferença entre contratação e hoje calculada.','Calcule o intervalo entre HIRE_DATE e a data atual do Oracle.');
+        check(/\/\s*12\b/.test(c.sel)&&(has(c.sel,'FLOOR')||has(c.sel,'TRUNC')),'Conversão para anos inteiros identificada.','Converta meses em anos e descarte a parte fracionária.');break;
+      case 18:
+        common('EMPLOYEES');check(selected('FIRST_NAME')&&selected('SALARY'),'Nome e salário selecionados.','Selecione o primeiro nome e o salário de cada funcionário.');
+        check(has(c.sel,'CASE')&&has(c.sel,'WHEN')&&has(c.sel,'THEN')&&has(c.sel,'END'),'Estrutura de classificação encontrada.','Use uma expressão CASE com condições e um resultado para cada faixa.');
+        check(/\bSALARY\s*<\s*5000\b/.test(c.sel)&&/\b(?:BETWEEN\s+5000\s+AND\s+10000|SALARY\s*>=\s*5000[\s\S]*SALARY\s*<=\s*10000)\b/.test(c.sel),'Limites numéricos das faixas identificados.','Confira os limites: abaixo de 5.000; de 5.000 até 10.000; acima de 10.000.');
+        check(/\bSALARY\s*<\s*5000\s+THEN\s+'JÚNIOR'/.test(c.sel)&&/\b(?:BETWEEN\s+5000\s+AND\s+10000|SALARY\s*>=\s*5000[\s\S]*SALARY\s*<=\s*10000)\s+THEN\s+'PLENO'/.test(c.sel)&&/\b(?:ELSE|THEN)\s+'SÊNIOR'/.test(c.sel),'Três classificações encontradas.','Confira os três nomes exigidos para as faixas salariais.');break;
+      case 19:
+        check(sqlCount('EMPLOYEES')>=2,'Funcionários e gerentes relacionados na mesma tabela.','É preciso localizar os funcionários que são gestores de outros funcionários.');
+        check(selected('FIRST_NAME')&&selected('LAST_NAME'),'Nomes e sobrenomes selecionados.','Mostre primeiro nome e sobrenome do gerente.');
+        check(joinKey('MANAGER_ID','EMPLOYEE_ID'),'Vínculo de chefia encontrado.','Compare o identificador do gerente com o identificador do funcionário.');
+        check(hasDistinct(),'Mecanismo de remoção de duplicatas localizado.','O mesmo gerente aparece várias vezes. Como devolver apenas uma linha por gerente?');break;
+      case 20:
+        common('EMPLOYEES');fields(['FIRST_NAME','SALARY','DEPARTMENT_ID']);
+        check(grpFunc('MAX','SALARY')||/\bDENSE_RANK\s*\(/.test(c.text),'Maior salário utilizado no cálculo.','Compare o salário do funcionário ao maior salário do seu departamento.');
+        check(/\bDEPARTMENT_ID\s*=\s*[A-Z][\w$#]*\s*\.\s*DEPARTMENT_ID\b/.test(c.text)||/\bDEPARTMENT_ID\b[\s\S]*\bGROUP\s+BY\s+(?:[A-Z][\w$#]*\s*\.\s*)?DEPARTMENT_ID\b/.test(c.text)||/\bPARTITION\s+BY\s+(?:[A-Z][\w$#]*\s*\.\s*)?DEPARTMENT_ID\b/.test(c.text),'Cálculo considerado por departamento.','O maior salário precisa ser calculado separadamente para cada departamento.');
+        check((/\bSALARY\s*=\s*\(\s*SELECT\b/.test(c.text)||/\bSALARY\s*=\s*[A-Z][\w$#]*\s*\.\s*[A-Z_]*MAX[A-Z_]*\b/.test(c.text)||/\bDENSE_RANK\s*\(/.test(c.text)),'Filtro do maior salário identificado.','Retorne apenas as pessoas empatadas no maior salário do próprio departamento.');break;
+    }
+    const missing=checks.filter(x=>!x.ok),passed=checks.length-missing.length;
+    return {kind:missing.length?'review':'aligned',passed,total:checks.length,checks,
+      note:missing.length?'Ainda há pontos a revisar. Veja os próximos ajustes e tente novamente.':'Sua consulta parece atender aos critérios básicos deste desafio. Execute no Oracle para confirmar o resultado.'};
+  }
+  function renderVerification(result){
+    const panel=$('verify-result');
+    panel.hidden=false;
+    panel.className='verify-result '+result.kind;
+    const icon=result.kind==='aligned'?'✓':result.kind==='error'?'!':'↗';
+    const heading=result.kind==='aligned'?'Boa! Estrutura alinhada':result.kind==='error'?'Não foi possível analisar':'Quase lá! Revise sua consulta';
+    const total=result.total?`<span class="verify-count">${result.passed} de ${result.total} critérios identificados</span>`:'';
+    const firstMissing=(result.checks||[]).filter(x=>!x.ok).slice(0,2);
+    const passed=(result.checks||[]).filter(x=>x.ok).slice(0,2);
+    panel.innerHTML=`<div class="verify-head"><span class="verify-mark">${icon}</span><strong>${heading}</strong>${total}</div><p>${escapeHtml(result.note)}</p>`+
+      (passed.length&&result.kind==='review'?`<div class="verify-passed">✓ ${escapeHtml(passed.map(x=>x.pass).join(' · '))}</div>`:'')+
+      (firstMissing.length?`<div class="verify-next"><strong>O que revisar agora</strong><ul>${firstMissing.map(x=>`<li>${escapeHtml(x.help)}</li>`).join('')}</ul></div>`:'')+
+      `<div class="verify-disclaimer">🔎 Verificação orientativa, sem executar SQL. Pode não reconhecer alternativas válidas ou identificar todos os erros de sintaxe. <strong>Confirme no Oracle antes de marcar como concluído.</strong></div>`;
+  }
+  function clearVerification(){const panel=$('verify-result');panel.hidden=true;panel.innerHTML='';}
+
+  const levelNames = ["Consultas básicas, filtros e ordenação", "Junções (JOINs) e relacionamentos", "Agregações, agrupamentos e subconsultas", "Desafios avançados"];
+  const storageKey='sqlLabOracleHr_v1';
+  let store={answers:{},completed:{},hints:{}};
+  try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved==='object')store={...store,...saved};}catch(e){}
+  let activeId=1, filter=0, term='';
+  const $=(id)=>document.getElementById(id);
+  const getEx=()=>exercises.find(e=>e.id===activeId);
+  function persist(){try{localStorage.setItem(storageKey,JSON.stringify(store));}catch(e){}}
+  function toast(message){let t=$('toast');t.textContent=message;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2700);}
+  function escapeHtml(value){return String(value).replace(/[&<>"']/g,(s)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
+  function formatPrompt(value){return escapeHtml(value).replace(/\b(EMPLOYEES|DEPARTMENTS|LOCATIONS|JOBS|LAST_NAME|FIRST_NAME|JOB_ID|HIRE_DATE|SALARY|COMMISSION_PCT|COUNTRY_ID|DEPARTMENT_NAME|DEPARTMENT_ID|LOCATION_ID|JOB_TITLE|CITY|STATE_PROVINCE|MANAGER_ID|EMPLOYEE_ID|CASE|JÚNIOR|PLENO|SÊNIOR)\b/g, '<code>$1</code>');}
+  function navList(){const matches=exercises.filter(e=>(!filter||e.level===filter)&&(`${e.title} ${e.prompt} ${e.id}`).toLowerCase().includes(term.toLowerCase()));$('exercise-list').innerHTML=matches.length?matches.map(e=>`<button type="button" class="item ${e.id===activeId?'active':''} ${store.completed[e.id]?'done':''}" data-id="${e.id}" aria-current="${e.id===activeId?'true':'false'}"><span class="item-num">${String(e.id).padStart(2,'0')}</span><span class="item-body"><span class="item-title" style="display:block">${escapeHtml(e.title)}</span><span class="item-sub" style="display:block">Nível ${e.level}</span></span>${store.completed[e.id]?'<span class="check" aria-label="Concluído">✓</span>':''}</button>`).join(''):'<div class="empty">Nenhum exercício encontrado.</div>';
+    $('exercise-list').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>openEx(Number(b.dataset.id))));}
+  function filters(){ $('filters').innerHTML=[0,1,2,3,4].map(l=>`<button class="filter ${filter===l?'active':''}" data-level="${l}" aria-pressed="${filter===l}">${l?'Nível '+l:'Todos'}</button>`).join(''); $('filters').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{filter=Number(b.dataset.level);filters();navList();}));}
+  function renderHints(){let e=getEx(),count=Math.min(3,Number(store.hints[e.id])||0);$('hint-count').textContent=`${count} de 3 pistas reveladas`;$('tips-list').innerHTML=count?e.hints.slice(0,count).map((hint,index)=>`<div class="tip"><div class="tip-number">${index+1}.</div><div>${escapeHtml(hint)}</div></div>`).join(''):'<div class="tips-empty">💭 Primeiro tente imaginar quais tabelas, campos e comandos você precisará.</div>';$('hint-btn').disabled=count>=3;$('hint-btn').textContent=count>=3?'Todas as dicas reveladas':`Revelar ${count+1}ª dica`;$('hide-hints-btn').style.display=count>0?'inline-block':'none';}
+  function progress(){const num=exercises.filter(e=>!!store.completed[e.id]).length;$('done-count').textContent=`${num} / ${exercises.length}`;$('progress-fill').style.width=`${num/exercises.length*100}%`;}
+  function status(){let done=!!store.completed[activeId];$('status-pill').textContent=done?'✓ Concluído':'Em andamento';$('status-pill').style.color=done?'var(--mint)':'';$('complete-btn').textContent=done?'↶ Voltar para em andamento':'✓ Marcar como concluído';}
+  function openEx(id){clearVerification();activeId=id;const e=getEx();$('exercise-badge').textContent='EXERCÍCIO '+String(e.id).padStart(2,'0');$('level-badge').textContent='NÍVEL '+e.level;$('level-name').textContent=levelNames[e.level-1];$('exercise-title').textContent=e.title;$('exercise-prompt').innerHTML=formatPrompt(e.prompt);$('sql-input').value=store.answers[e.id]||'';$('prev-btn').disabled=activeId===1;$('next-btn').disabled=activeId===exercises.length;status();renderHints();navList();document.title=`${String(e.id).padStart(2,'0')} · ${e.title} | SQL LAB`;}
+  $('search').addEventListener('input',e=>{term=e.target.value;navList();});
+  $('hint-btn').addEventListener('click',()=>{store.hints[activeId]=Math.min(3,(Number(store.hints[activeId])||0)+1);persist();renderHints();});
+  $('hide-hints-btn').addEventListener('click',()=>{store.hints[activeId]=0;persist();renderHints();});
+  $('verify-btn').addEventListener('click',()=>{renderVerification(evaluateSQL(activeId,$('sql-input').value));});
+  $('sql-input').addEventListener('input',e=>{clearVerification();store.answers[activeId]=e.target.value;persist();});
+  $('sql-input').addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();let t=e.target,start=t.selectionStart,end=t.selectionEnd;t.value=t.value.substring(0,start)+'  '+t.value.substring(end);t.selectionStart=t.selectionEnd=start+2;clearVerification();store.answers[activeId]=t.value;persist();}});
+  $('clear-btn').addEventListener('click',()=>{if(!($('sql-input').value||'').trim())return;if(confirm('Limpar a consulta deste exercício?')){$('sql-input').value='';clearVerification();store.answers[activeId]='';persist();toast('Consulta limpa.');}});
+  $('copy-btn').addEventListener('click',async()=>{const value=$('sql-input').value;if(!value.trim()){toast('Escreva uma consulta antes de copiar.');return;}try{await navigator.clipboard.writeText(value);toast('Consulta copiada!');}catch(e){$('sql-input').focus();$('sql-input').select();try{document.execCommand('copy');toast('Consulta copiada!');}catch(err){toast('Selecione o texto e copie manualmente.');}}});
+  $('complete-btn').addEventListener('click',()=>{store.completed[activeId]=!store.completed[activeId];persist();status();progress();navList();toast(store.completed[activeId]?'Desafio concluído!':'Desafio reaberto.');});
+  $('next-btn').addEventListener('click',()=>openEx(Math.min(20,activeId+1)));
+  $('prev-btn').addEventListener('click',()=>openEx(Math.max(1,activeId-1)));
+  $('download-btn').addEventListener('click',()=>{const txt=['SQL LAB — EXERCÍCIOS DO SCHEMA HR ORACLE','Minhas consultas — sem gabarito', '','='.repeat(64),'',...exercises.flatMap(e=>[`EXERCÍCIO ${String(e.id).padStart(2,'0')} — ${e.title}` ,`Nível ${e.level}: ${levelNames[e.level-1]}`,e.prompt,'',store.answers[e.id]||'-- Não respondido','', '-'.repeat(64),''])].join('\n');const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='meus_exercicios_sql_oracle_hr.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Arquivo de respostas gerado!');});
+  filters();openEx(1);progress();
+  </script>
+</body>
+</html>
