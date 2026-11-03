@@ -94,11 +94,20 @@ def buscar_suco_por_id(id: int):
         if suco["id"] == id:
             return suco
 
-        raise HTTPException(
-            status_code=404,
-            detail=f"Suco com ID {id} não foi encontrado."
-        )
-#
-
-#
-#
+    raise HTTPException(
+        status_code=404,
+        detail=f"Suco com ID {id} não foi encontrado."
+    )
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+#DELETE funçao que apagaga um suco da lista de fucos@]
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+@app.delete("/sucos/{suco_id}")
+def deletar_suco(suco_id: int):
+    for index, suco  in enumerate(banco_sucos):
+        if suco["id"] == suco_id: 
+            suco_removido = banco_sucos.pop(index)
+            return {
+             "mensagem": "suco  deletado com sucesso!",
+             "suco_removido": suco_removido
+         }
+    raise HTTPException(status_code=404, detail="suco não encontrado para exclusão")
