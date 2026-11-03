@@ -1,0 +1,301 @@
+SQL LAB — EXERCÍCIOS DO SCHEMA HR ORACLE
+Minhas consultas — sem gabarito
+
+================================================================
+
+EXERCÍCIO 01 — Contratações em ordem
+Nível 1: Consultas básicas, filtros e ordenação
+Liste o sobrenome (LAST_NAME), cargo (JOB_ID) e data de contratação (HIRE_DATE) de todos os funcionários, ordenando da contratação mais antiga para a mais recente.
+
+SELECT LAST_NAME, JOB_ID, HIRE_DATE
+FROM employees
+ORDER BY HIRE_DATE ASC;
+
+
+----------------------------------------------------------------
+
+EXERCÍCIO 02 — Salários e cargo
+Nível 1: Consultas básicas, filtros e ordenação
+Exiba o primeiro nome, sobrenome e salário dos funcionários que ganham mais de $12.000 e ocupam o cargo IT_PROG.
+
+SELECT FIRST_NAME, LAST_NAME, SALARY
+FROM EMPLOYEES
+WHERE JOB_ID = 'IT_PROG'
+  AND SALARY >12000;
+
+
+----------------------------------------------------------------
+
+EXERCÍCIO 03 — Sobrenomes com J ou K
+Nível 1: Consultas básicas, filtros e ordenação
+Selecione todos os funcionários cujo sobrenome (LAST_NAME) começa com a letra J ou com a letra K.
+
+SELECT *
+FROM  EMPLOYEES 
+WHERE (LAST_NAME LIKE 'J%' OR LAST_NAME LIKE 'K%')
+  AND JOB_ID = 'IT_PROG'
+  AND SALARY > 12000;
+
+----------------------------------------------------------------
+
+EXERCÍCIO 04 — Nome completo e comissão
+Nível 1: Consultas básicas, filtros e ordenação
+Exiba o nome completo (primeiro nome + sobrenome) e a comissão (COMMISSION_PCT) de todos os funcionários que recebem comissão, em ordem decrescente do percentual.
+
+SELECT FIRST_NAME  || ' ' ||  AS LAST_NAME NAME_COMPLETO, COMMISSION_PCT
+FROM EMPLOYEES
+WHERE COMMISSION_PCT IS NOT NULL
+ORDER BY COMMISSION_PCT DESC; 
+
+----------------------------------------------------------------
+
+EXERCÍCIO 05 — Localizações dos EUA e Canadá
+Nível 1: Consultas básicas, filtros e ordenação
+Mostre o ID da localização, endereço de rua e cidade das localizações cujo país (COUNTRY_ID) é US ou CA.
+
+SELECT LOCATION_ID, STREET_ADDRESS, CITY
+FROM LOCATIONS
+WHERE COUNTRY_ID = 'US'
+  OR COUNTRY_ID = 'CA'; 
+
+----------------------------------------------------------------
+
+EXERCÍCIO 06 — Funcionário e departamento
+Nível 2: Junções (JOINs) e relacionamentos
+Exiba o primeiro nome de cada funcionário, seu ID de departamento e o nome do departamento (DEPARTMENT_NAME).
+
+SELECT FIRST_NAME, E.DEPARTMENT_ID, D.DEPARTMENT_NAME
+FROM EMPLOYEES E
+JOIN DEPARTMENTS D ON  E.DEPARTMENT_ID = D.DEPARTMENT_ID;
+
+----------------------------------------------------------------
+
+EXERCÍCIO 07 — Cargo e faixa salarial
+Nível 2: Junções (JOINs) e relacionamentos
+Liste o primeiro nome do funcionário, o título do cargo (JOB_TITLE) e os salários mínimo e máximo permitidos para o cargo.
+
+SELECT
+  e.first_name,
+  j.job_title,
+  j.min_salary,
+  j.max_salary
+From
+  employees
+JOIN
+  jobs j ON e.job_id = j.job_id;
+
+----------------------------------------------------------------
+
+EXERCÍCIO 08 — Departamento e localização
+Nível 2: Junções (JOINs) e relacionamentos
+Mostre o sobrenome de cada funcionário, o nome do departamento, a cidade (CITY) e o estado (STATE_PROVINCE) onde o departamento está localizado.
+
+SELECT
+  employees.last_name,
+  departments.department_name,
+  locations.city,
+  locations.state_province
+FROM
+ EMPLOYEES 
+INNER JOIN
+  departments on employees on employees.department_id = departments.department_id
+INNER JOIN
+  LOCATIONS ON departments.location_id = locations.location_id;
+
+----------------------------------------------------------------
+
+EXERCÍCIO 09 — Quem é o gerente?
+Nível 2: Junções (JOINs) e relacionamentos
+Liste o primeiro nome de cada funcionário e o primeiro nome do seu respectivo gerente. Nomeie as colunas como Funcionario e Gerente.
+
+SELECT F.FIRST_NAME AS "Funcionario",
+  g.first_name AS "Gerente"
+FROM
+  employees f
+INNER JOIN
+  employees g on f.manager_id = g.employee_id;
+------------------------------------------------------------------------------
+
+---------------------------------------------
+
+EXERCÍCIO 10 — Todos os departamentos
+Nível 2: Junções (JOINs) e relacionamentos
+Liste todos os departamentos e a quantidade de funcionários em cada um, incluindo os departamentos sem funcionários, com contagem 0.
+
+SELECT 
+  d.department_id, 
+  d.department_name,
+  COUNT(e.employee_id) AS total_funcionarios
+FROM
+  departments d
+LEFT JOIN
+  employees e ON d.department_id = e.department_id
+GROUP BY
+  d.department_id,
+  d.department_name
+ORDER BY
+  d.department_id;
+
+
+----------------------------------------------------------------
+
+EXERCÍCIO 11 — Resumo dos salários
+Nível 3: Agregações, agrupamentos e subconsultas
+Mostre o maior salário, o menor salário, a soma dos salários e a média salarial da empresa inteira.
+
+SELECT
+  MAX(salary) AS maior_salario,
+  MIN(salary) AS menor_salario
+  SUM(salary) AS soma_salarios,
+  ROUND(AVG(salary),  2) AS media_salarial
+FROM 
+  employees;  
+
+----------------------------------------------------------------
+
+EXERCÍCIO 12 — Departamentos acima da média
+Nível 3: Agregações, agrupamentos e subconsultas
+Exiba o ID de cada departamento e sua média salarial, mas apenas para departamentos cuja média salarial seja maior que $6.000.
+
+SELECT
+  department_id
+  ROUND(AVG(salary), 2) AS media_salarial
+FROM
+  employees
+GROUP BY
+  department_id
+HAVING
+  AVG(salary) > 6000;
+
+----------------------------------------------------------------
+
+EXERCÍCIO 13 — Maior folha por cargo
+Nível 3: Agregações, agrupamentos e subconsultas
+Descubra qual cargo (JOB_ID) possui o maior gasto total com salários (soma dos salários pagos aos funcionários do cargo).
+
+SELECT
+  job_id,
+  sum(salary) AS total_salarios
+FROM
+  employees
+GROUP BY
+  job_id
+ORDER BY
+  total_salarios DESC
+FETCH FIRST 1 ROWS ONLY;
+
+----------------------------------------------------------------
+
+EXERCÍCIO 14 — Acima da média da empresa
+Nível 3: Agregações, agrupamentos e subconsultas
+Selecione o primeiro nome e o salário dos funcionários que ganham mais do que a média salarial da empresa inteira. Use subconsulta.
+
+SELECT
+  first_name,
+  salary
+FROM
+  Eemployees
+WHERE
+  salary > (
+    SELECT AVG(salary)
+    From employees
+    
+  )
+ORDER BY
+  salary desc;
+
+----------------------------------------------------------------
+
+EXERCÍCIO 15 — Colegas de Lex
+Nível 3: Agregações, agrupamentos e subconsultas
+Liste o primeiro nome e o ID do departamento dos funcionários que trabalham no mesmo departamento que um funcionário chamado Lex. Use subconsulta.
+
+SELECT 
+  first_name, 
+  department_id
+FROM
+  employees
+WHERE 
+  department_id IN (
+    SELECT department_id
+    FROM employees
+    WHERE first_name = 'Lex'
+);
+
+----------------------------------------------------------------
+
+EXERCÍCIO 16 — Simulação de aumento
+Nível 4: Desafios avançados
+Exiba o primeiro nome, salário atual e salário projetado com aumento de 15%, formatando os dois valores monetários com duas casas decimais.
+
+SELECT
+  first_name,
+  TO_CHAR(salary, 'FM999,999,990.00') AS salario_atual,
+  TO_CHAR(salary * 1.15, 'FM999,999,990.00') AS salario_projetado
+FROM
+  EMPLOYEES;
+
+----------------------------------------------------------------
+
+EXERCÍCIO 17 — Tempo de casa
+Nível 4: Desafios avançados
+Mostre o primeiro nome de cada funcionário e quantos anos completos ele tem de empresa, contando desde HIRE_DATE até a data atual.
+
+SELECT
+  first_name,
+TRUNC(MONTHS_BETWEEN(SYSDATE, hire_date) /12) AS anos_de_empresa
+FROM
+  employees;
+
+----------------------------------------------------------------
+
+EXERCÍCIO 18 — Classificação por salário
+Nível 4: Desafios avançados
+Mostre o primeiro nome, salário e classificação: JÚNIOR para salários menores que 5.000, PLENO de 5.000 a 10.000 (inclusive) e SÊNIOR acima de 10.000. Use CASE.
+
+SELECT
+  first_name,
+  salary,
+  CASE
+      WHEN salary < 5000 THEN 'JÚNIOR'
+      WHEN salary BETWEEN 5000 AND 10000 THEN 'PLENO'
+      ELSE 'SÊNIOR'
+  END AS classificacao
+FROM
+  employees;
+
+----------------------------------------------------------------
+
+EXERCÍCIO 19 — Lista única de gerentes
+Nível 4: Desafios avançados
+Mostre o primeiro nome e o sobrenome de todos os gerentes da empresa, sem repetir nomes. Considere gerente quem aparece na coluna MANAGER_ID de algum funcionário.
+
+SELECT DISTINCT
+  first_name,
+  last_name
+FROM
+  employees e
+JOIN 
+  employees m ON e.manager_id = m.employee_id;
+       
+
+----------------------------------------------------------------
+
+EXERCÍCIO 20 — Maior salário do departamento
+Nível 4: Desafios avançados
+Mostre o primeiro nome, salário e ID do departamento dos funcionários que recebem o maior salário dentro de seu próprio departamento.
+
+SELECT 
+    first_name,
+    salary,
+    department_id
+FROM
+  employees e
+WHERE
+  salary = (
+      SELECT MAX(salary)
+      FROM employees
+      WHERE department_id = e.department_id
+);
+
+----------------------------------------------------------------
